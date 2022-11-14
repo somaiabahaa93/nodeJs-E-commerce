@@ -1,10 +1,14 @@
 const express = require("express");
 const dotenv = require("dotenv");
+
 dotenv.config({ path: "config.env" });
 const morgan = require("morgan");
 const dbConnection = require("./config/database");
 const categoryRoute = require("./routes/categoryRoute");
 const subcategoryRoute = require("./routes/subCategoryRoute");
+const brandRoute = require("./routes/brandRoute");
+const productRoute = require("./routes/productRoute");
+
 const ApiError = require("./utils/ApiError");
 const globalError = require("./middelwares/errorMiddleware");
 // express app
@@ -14,6 +18,7 @@ const app = express();
 dbConnection();
 
 // middlewares
+// eslint-disable-next-line eqeqeq
 if (process.env.NODE_ENV == "development") {
   const dev = process.env.NODE_ENV;
   app.use(morgan("dev"));
@@ -24,6 +29,9 @@ app.use(express.json());
 // routes
 app.use("/api/v1/categories", categoryRoute);
 app.use("/api/v1/subcategories", subcategoryRoute);
+app.use("/api/v1/brands", brandRoute);
+app.use("/api/v1/products", productRoute);
+
 app.all("*", (req, res, next) => {
   // const err=new Error(`cant find this route ${req.originalUrl}`)
   // next(err.message)
