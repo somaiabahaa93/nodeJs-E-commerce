@@ -6,7 +6,7 @@ const productSchema = new mongoose.Schema(
       type: String,
       trim: true,
       minLength: [2, "too short product title"],
-      maxLength: [20, "too long title"],
+      maxLength: [200, "too long title"],
       reguired: [true, "product title is required"],
     },
     slug: {
@@ -31,16 +31,16 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: [true, "product price is required"],
       trim: true,
-      max: [20, "too much price for product"],
+      max: [200000, "too much price for product"],
     },
     priceAfterDiscount: {
       type: Number,
     },
     colors: [String],
     images: [String],
-    coverImage: {
+    imageCover: {
       type: String,
-      required: [true, " cover image is required"],
+      required: [true, "  image cover is required"],
     },
     category: {
       type: mongoose.Schema.ObjectId,
@@ -48,10 +48,12 @@ const productSchema = new mongoose.Schema(
       required: [true, "category is required for a product"],
     },
 
-    sub: {
-      type: mongoose.Schema.ObjectId,
-      ref: "subCategory",
-    },
+    subcategories: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "subCategory",
+      },
+    ],
     brand: {
       type: mongoose.Schema.ObjectId,
       ref: "brand",

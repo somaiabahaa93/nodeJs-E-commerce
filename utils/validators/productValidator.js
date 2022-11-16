@@ -1,5 +1,7 @@
 const { check } = require("express-validator");
 const validatorMiddleware = require("../../middelwares/validatorMiddleware");
+const CategoryModel = require("../../models/categoryModel");
+const subCategoryModel = require("../../models/subCategoryModel");
 
 exports.createProductValidator = [
   check("title")
@@ -7,7 +9,7 @@ exports.createProductValidator = [
     .withMessage("product title  is required")
     .isLength({ min: 2 })
     .withMessage("min length is 2")
-    .isLength({ max: 32 })
+    .isLength({ max: 200 })
     .withMessage("max length is 32 char"),
   check("description")
     .notEmpty()
@@ -27,7 +29,7 @@ exports.createProductValidator = [
     .withMessage("price is required")
     .isNumeric()
     .withMessage("price must be number")
-    .isLength({ max: 32 })
+    .isLength({ max: 20000 })
     .withMessage("max price length is 20"),
   check("priceAfterDiscount")
     .optional()
@@ -48,13 +50,51 @@ exports.createProductValidator = [
     .optional()
     .isArray()
     .withMessage("images should be array of strings"),
-  check("coverImage").notEmpty().withMessage("coverImage   is required"),
+  check("imageCover").notEmpty().withMessage("ImageCover   is required"),
   check("category")
     .notEmpty()
     .withMessage("category   is required")
     .isMongoId()
-    .withMessage("it is invalid id"),
-  check("sub").optional().isMongoId().withMessage("it is invalid id"),
+    .withMessage("it is invalid id")
+    .custom((cat) =>
+      CategoryModel.findById(cat).then((catValue) => {
+        if (!catValue) {
+          // eslint-disable-next-line prefer-promise-reject-errors
+          return Promise.reject("No Category found for this id");
+        }
+      })
+    ),
+  check("subcategories")
+    .optional()
+    .isMongoId()
+    .withMessage("it is invalid id")
+    .custom((subcategoriesIds) =>
+      subCategoryModel
+        .find({ _id: { $exists: true, $in: subcategoriesIds } })
+        .then((result) => {
+          if (result < 1 || result.length < subcategoriesIds.length) {
+            // eslint-disable-next-line prefer-promise-reject-errors
+            return Promise.reject("No subCategories found for this ids");
+          }
+          console.log("res", result);
+        })
+    )
+    .custom((val, { req }) =>
+      subCategoryModel
+        .find({ category: req.body.category })
+        .then((subCatInDb) => {
+          const subIdsInDb = [];
+          subCatInDb.forEach((subCat) => {
+            subIdsInDb.push(subCat._id.toString());
+          });
+          const checker = (target, arr) => target.every((v) => arr.includes(v));
+          if (!checker(val, subIdsInDb)) {
+            return Promise.reject(
+              new Error("subCategories dont belong to this category")
+            );
+          }
+        })
+    ),
   check("brand").optional().isMongoId().withMessage("it is invalid id"),
   check("ratingsAverage")
     .optional()
