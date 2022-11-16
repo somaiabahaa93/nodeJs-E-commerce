@@ -6,14 +6,63 @@ const ApiError = require("../utils/ApiError");
 // @desc   get all products
 // route  GET /api/v1/products
 exports.getProducts = asyncHandler(async (req, res) => {
-  // for pagination
+  //1-for filtration using = operators
+  const queryStringObj = { ...req.query };
+  const excludes = ["limit", "page", "fields", "sort"];
+  excludes.forEach((field) => delete queryStringObj[field]);
+  console.log("req", queryStringObj);
+  //  let mongooseQuery = ProductModel.find(queryStringObj)
+
+  // filtration using [gte,gt,lte,lt]
+  let queryStr = JSON.stringify(queryStringObj);
+  queryStr = queryStr.replace(/\b(gte|gt|lt|lte)\b/g, (match) => `$${match}`);
+  console.log(JSON.parse(queryStr));
+  //  let mongooseQuery = ProductModel.find(JSON.parse(queryStr))
+
+  // 2-for pagination
   const page = req.query.page * 1 || 1;
-  const limit = req.query.limit * 1 || 4;
+  const limit = req.query.limit * 1 || 50;
   const skip = (page - 1) * limit;
-  const products = await ProductModel.find({})
+
+  //Build Query
+  let mongooseQuery = ProductModel.find({})
     .skip(skip)
     .limit(limit)
     .populate({ path: "category", select: "name -_id" });
+
+  // 3-sorting
+  console.log("eq>>>>", req.query);
+  if (req.query.sort) {
+    // if sort has more than 1 parameter
+    const sortBy = req.query.sort.split(",").join(" ");
+    console.log(sortBy);
+    mongooseQuery = mongooseQuery.sort(sortBy);
+  } else {
+    mongooseQuery = mongooseQuery.sort("-createdAt");
+  }
+
+  // 4-field limitations
+  if (req.query.fields) {
+    let { fields } = req.query;
+    fields = fields.split(",").join(" ");
+    console.log("fields", fields);
+    mongooseQuery = mongooseQuery.select(fields);
+  } else {
+    mongooseQuery = mongooseQuery.select("-__v");
+  }
+
+  // 5-Search
+  if (req.query.keyword) {
+    const query = {};
+    query.$or = [
+      { title: { $regex: req.query.keyword, $options: "i" } },
+      { description: { $regex: req.query.keyword, $options: "i" } },
+    ];
+    mongooseQuery = mongooseQuery.find(query);
+  }
+
+  //Excute query
+  const products = await mongooseQuery;
   res
     .status(200)
     .json({ results: products.length, page: page, data: products });
