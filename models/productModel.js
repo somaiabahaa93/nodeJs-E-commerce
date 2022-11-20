@@ -68,4 +68,14 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// mongoose query middleware to make populate
+productSchema.pre(/^find/, function (next) {
+  // eslint-disable-next-line no-unused-expressions
+  this.populate({
+    path: "category",
+    select: "name -_id",
+    // eslint-disable-next-line no-sequences
+  }),
+    next();
+});
 module.exports = mongoose.model("Product", productSchema);
