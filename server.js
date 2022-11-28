@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const dotenv = require("dotenv");
 
 dotenv.config({ path: "config.env" });
@@ -25,6 +26,7 @@ if (process.env.NODE_ENV == "development") {
   console.log(`we using now ${dev}`);
 }
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "uploads")));
 
 // routes
 app.use("/api/v1/categories", categoryRoute);
