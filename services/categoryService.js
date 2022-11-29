@@ -1,51 +1,26 @@
 /* eslint-disable no-undef */
-const multer = require("multer");
 const asyncHandler = require("express-async-handler");
 
 const { v4: uuidv4 } = require("uuid");
 const sharp = require("sharp");
 const CategoryModel = require("../models/categoryModel");
-const ApiError = require("../utils/ApiError");
 const factory = require("../utils/handlerFactory");
-
-// 1-diskStorage
-// const multerStorage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "uploads/categories");
-//   },
-//   filename: function (req, file, cb) {
-//     const ext = file.mimetype.split("/")[1];
-//     const filename = `category-${uuidv4()}-${Date.now()}.${ext}`;
-//     cb(null, filename);
-//   },
-// });
-
-// 2-memory Storage if needed to make proccessing
-const multerStorage = multer.memoryStorage();
-// filter files to images only
-multerFilter = function (req, file, cb) {
-  if (file.mimetype.startsWith("image")) {
-    cb(null, true);
-  } else {
-    cb(new ApiError("Only images are allowed", 400), false);
-  }
-};
-
-const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
+const { uploadSingleImage } = require("../middelwares/uploadeImageMiddleware");
 
 // middleware for images
-exports.uploadeCategoryImage = upload.single("image");
+exports.uploadeCategoryImage = uploadSingleImage("image");
 
-// resize images using sharp
+// resize images using sharp (processing)
 exports.resizeImage = asyncHandler(async (req, res, next) => {
   const filename = `category-${uuidv4()}-${Date.now()}.jpeg`;
-
+  // if (req.file) {
   await sharp(req.file.buffer)
     .resize(300, 300)
     .toFormat("jpeg")
     .jpeg({ quality: 90 })
     .toFile(`uploads/categories/${filename}`);
   req.body.image = filename;
+  // }
   next();
 });
 
