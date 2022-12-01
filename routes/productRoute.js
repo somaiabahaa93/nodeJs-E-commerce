@@ -14,14 +14,24 @@ const {
   getProduct,
   updateProduct,
   deleteProduct,
+  uploadProductImages,
+  resizeImages,
 } = require("../services/productService");
 
 router.get("/", getProducts);
-router.route("/").get(getProducts).post(createProductValidator, createProduct);
+router
+  .route("/")
+  .get(getProducts)
+  .post(
+    uploadProductImages,
+    resizeImages,
+    createProductValidator,
+    createProduct
+  );
 router
   .route("/:id")
   .get(getProductValidator, getProduct)
-  .put(updateProductValidator, updateProduct)
+  .put(uploadProductImages, resizeImages, updateProductValidator, updateProduct)
   .delete(deleteProductValidator, deleteProduct);
 
 module.exports = router;

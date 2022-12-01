@@ -1,7 +1,7 @@
 const multer = require("multer");
 const ApiError = require("../utils/ApiError");
 
-exports.uploadSingleImage = (fieldName) => {
+const uploadOptions = () => {
   // 1-diskStorage
   // const multerStorage = multer.diskStorage({
   //   destination: function (req, file, cb) {
@@ -23,6 +23,17 @@ exports.uploadSingleImage = (fieldName) => {
       cb(new ApiError("Only images are allowed", 400), false);
     }
   };
+
   const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
-  return upload.single(fieldName);
+  return upload;
 };
+
+// upload single image
+// exports.uploadSingleImage = (fieldName) => {
+//   const upload = uploadOptions();
+//   return upload.single(fieldName);
+// };
+
+exports.uploadSingleImage = (fieldName) => uploadOptions().single(fieldName);
+// upload many images
+exports.uploadMultipleImages = (ArrFields) => uploadOptions().fields(ArrFields);
