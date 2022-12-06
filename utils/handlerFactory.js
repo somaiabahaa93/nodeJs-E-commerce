@@ -7,7 +7,7 @@ exports.deleteOne = (Model) =>
     const { id } = req.params;
     const document = await Model.findByIdAndDelete(id);
     if (!document) {
-      return next(new ApiError("no category found for this id", 404));
+      return next(new ApiError("no document found for this id", 404));
     }
     res.status(204).json({ msg: "deleted" });
   });
@@ -18,7 +18,7 @@ exports.updateOne = (Model) =>
       new: true,
     });
     if (!document) {
-      return next(new ApiError("no brand found for this id", 404));
+      return next(new ApiError("no document found for this id", 404));
     }
     res.status(200).json({ data: document });
   });
@@ -29,7 +29,7 @@ exports.getOne = (Model) =>
     const document = await Model.findById(id);
     if (!document) {
       // res.status(400).json({msg:"no brand found for this id"})
-      return next(new ApiError("no brand found for this id", 404));
+      return next(new ApiError("no document found for this id", 404));
     }
     res.status(200).json({ data: document });
   });

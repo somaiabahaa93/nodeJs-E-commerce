@@ -11,14 +11,14 @@ exports.uploadeBrandImage = uploadSingleImage("image");
 // resize images using sharp (processing)
 exports.resizeImage = asyncHandler(async (req, res, next) => {
   const filename = `brand-${uuidv4()}-${Date.now()}.jpeg`;
-  // if (req.file) {
-  await sharp(req.file.buffer)
-    .resize(300, 300)
-    .toFormat("jpeg")
-    .jpeg({ quality: 90 })
-    .toFile(`uploads/brands/${filename}`);
-  req.body.image = filename;
-  // }
+  if (req.file) {
+    await sharp(req.file.buffer)
+      .resize(300, 300)
+      .toFormat("jpeg")
+      .jpeg({ quality: 90 })
+      .toFile(`uploads/brands/${filename}`);
+    req.body.image = filename;
+  }
   next();
 });
 

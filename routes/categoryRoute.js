@@ -18,6 +18,7 @@ const {
   uploadeCategoryImage,
   resizeImage,
 } = require("../services/categoryService");
+const { protect } = require("../services/authService");
 
 router.use("/:categoryId/subcategories", subCategoryRoute);
 router.get("/", getCategories);
@@ -25,6 +26,7 @@ router
   .route("/")
   .get(getCategories)
   .post(
+    protect,
     uploadeCategoryImage,
     resizeImage,
     createCategoryValidator,

@@ -26,7 +26,7 @@ router
 router
   .route("/:id")
   .get(getBrandValidator, getBrand)
-  .put(updateBrandValidator, updateBrand)
+  .put(uploadeBrandImage, resizeImage, updateBrandValidator, updateBrand)
   .delete(deleteBrandValidator, deleteBrand);
 
 module.exports = router;
