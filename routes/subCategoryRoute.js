@@ -17,15 +17,32 @@ const {
   setParametersToBody,
   createFilterObject,
 } = require("../services/subCategoryService");
+const authService = require("../services/authService");
 
 router
   .route("/")
-  .post(setParametersToBody, createSubCategoryValidator, createSubCategory)
+  .post(
+    authService.protect,
+    authService.allowedTo("admin", "manager"),
+    setParametersToBody,
+    createSubCategoryValidator,
+    createSubCategory
+  )
   .get(createFilterObject, getsubCategories);
 router
   .route("/:id")
   .get(getSubCategoryValidator, getSbuCategory)
-  .put(updateSubCategoryValidator, updateSubCategory)
-  .delete(deleteSubCategoryValidator, deleteSubCategory);
+  .put(
+    authService.protect,
+    authService.allowedTo("admin", "manager"),
+    updateSubCategoryValidator,
+    updateSubCategory
+  )
+  .delete(
+    authService.protect,
+    authService.allowedTo("admin"),
+    deleteSubCategoryValidator,
+    deleteSubCategory
+  );
 
 module.exports = router;

@@ -17,12 +17,15 @@ const {
   uploadProductImages,
   resizeImages,
 } = require("../services/productService");
+const authService = require("../services/authService");
 
 router.get("/", getProducts);
 router
   .route("/")
   .get(getProducts)
   .post(
+    authService.protect,
+    authService.allowedTo("admin", "manager"),
     uploadProductImages,
     resizeImages,
     createProductValidator,
@@ -31,7 +34,19 @@ router
 router
   .route("/:id")
   .get(getProductValidator, getProduct)
-  .put(uploadProductImages, resizeImages, updateProductValidator, updateProduct)
-  .delete(deleteProductValidator, deleteProduct);
+  .put(
+    authService.protect,
+    authService.allowedTo("admin", "manager"),
+    uploadProductImages,
+    resizeImages,
+    updateProductValidator,
+    updateProduct
+  )
+  .delete(
+    authService.protect,
+    authService.allowedTo("admin"),
+    deleteProductValidator,
+    deleteProduct
+  );
 
 module.exports = router;
