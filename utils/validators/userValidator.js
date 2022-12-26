@@ -63,6 +63,21 @@ exports.updateUserValidator = [
       req.body.slug = slugify(val);
       return true;
     }),
+  check("email")
+    .optional()
+    .isEmail()
+    .withMessage("this is not valid email")
+    .custom((val, { req }) =>
+      UserModel.findOne({ email: val }).then((user) => {
+        if (user) {
+          return Promise.reject(new Error("this email already used", 404));
+        }
+      })
+    ),
+  check("phone")
+    .optional()
+    .isMobilePhone(["ar-EG", "ar-SA"])
+    .withMessage("not accepted phone number"),
   validatorMiddleware,
 ];
 
@@ -100,5 +115,30 @@ exports.changePasswordValidator = [
 ];
 exports.deleteUserValidator = [
   check("id").isMongoId().withMessage("this is invalid id format"),
+  validatorMiddleware,
+];
+
+exports.updateLoggedUserValidator = [
+  check("name")
+    .optional()
+    .custom((val, { req }) => {
+      req.body.slug = slugify(val);
+      return true;
+    }),
+  check("email")
+    .optional()
+    .isEmail()
+    .withMessage("this is not valid email")
+    .custom((val, { req }) =>
+      UserModel.findOne({ email: val }).then((user) => {
+        if (user) {
+          return Promise.reject(new Error("this email already used", 404));
+        }
+      })
+    ),
+  check("phone")
+    .optional()
+    .isMobilePhone(["ar-EG", "ar-SA"])
+    .withMessage("not accepted phone number"),
   validatorMiddleware,
 ];

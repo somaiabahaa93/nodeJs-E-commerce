@@ -19,7 +19,7 @@ const {
   resizeImage,
 } = require("../services/brandService");
 
-router.get("/", getBrands);
+// router.get("/", getBrands);
 router
   .route("/")
   .get(getBrands)
