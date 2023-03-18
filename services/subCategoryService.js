@@ -1,12 +1,12 @@
 const SubCategoryModel = require("../models/subCategoryModel");
 const factory = require("../utils/handlerFactory");
 
+// for nested routes
 exports.setParametersToBody = (req, res, next) => {
   if (!req.body.category) req.body.category = req.params.categoryId;
   next();
 };
 
-// for nested route
 exports.createFilterObject = (req, res, next) => {
   let filterObject = {};
   // eslint-disable-next-line no-const-assign
@@ -16,6 +16,7 @@ exports.createFilterObject = (req, res, next) => {
   }
   next();
 };
+
 exports.getsubCategories = factory.getAll(SubCategoryModel);
 
 exports.getSbuCategory = factory.getOne(SubCategoryModel);

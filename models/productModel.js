@@ -65,9 +65,15 @@ const productSchema = new mongoose.Schema(
     },
     ratingQuantitiy: { type: Number, default: 0 },
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
+// virtual populate to get reviews of product
+productSchema.virtual("reviews", {
+  ref: "Review",
+  foreignField: "product",
+  localField: "_id",
+});
 // mongoose query middleware to make populate
 productSchema.pre(/^find/, function (next) {
   // eslint-disable-next-line no-unused-expressions

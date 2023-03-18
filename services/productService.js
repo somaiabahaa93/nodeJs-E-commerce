@@ -50,7 +50,7 @@ exports.resizeImages = asyncHandler(async (req, res, next) => {
 // route  GET /api/v1/products
 exports.getProducts = factory.getAll(ProductModel, "Products");
 
-exports.getProduct = factory.getOne(ProductModel);
+exports.getProduct = factory.getOne(ProductModel, "reviews");
 
 exports.createProduct = factory.createOne(ProductModel);
 

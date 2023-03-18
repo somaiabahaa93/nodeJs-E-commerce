@@ -23,10 +23,17 @@ exports.updateOne = (Model) =>
     res.status(200).json({ data: document });
   });
 
-exports.getOne = (Model) =>
+exports.getOne = (Model, populateOptions) =>
   asyncHandler(async (req, res, next) => {
     const { id } = req.params;
-    const document = await Model.findById(id);
+    // build query
+    let query = await Model.findById(id);
+
+    if (populateOptions) {
+      query = query.populate(populateOptions);
+    }
+    // execute query
+    const document = await query;
     if (!document) {
       // res.status(400).json({msg:"no brand found for this id"})
       return next(new ApiError("no document found for this id", 404));

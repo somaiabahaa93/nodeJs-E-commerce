@@ -7,7 +7,7 @@ const {
   updateProductValidator,
   deleteProductValidator,
 } = require("../utils/validators/productValidator");
-
+const ReviewRoutes = require("./reviewRoute");
 const {
   getProducts,
   createProduct,
@@ -18,6 +18,8 @@ const {
   resizeImages,
 } = require("../services/productService");
 const authService = require("../services/authService");
+// nested routes
+router.use("/:productId/reviews", ReviewRoutes);
 
 router.get("/", getProducts);
 router

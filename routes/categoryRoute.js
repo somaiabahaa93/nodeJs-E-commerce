@@ -20,6 +20,7 @@ const {
 } = require("../services/categoryService");
 const authService = require("../services/authService");
 
+// for nested routes
 router.use("/:categoryId/subcategories", subCategoryRoute);
 router.get("/", getCategories);
 router

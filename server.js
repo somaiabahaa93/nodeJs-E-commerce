@@ -1,4 +1,6 @@
 const express = require("express");
+const cors = require("cors");
+
 const path = require("path");
 const dotenv = require("dotenv");
 
@@ -11,6 +13,7 @@ const brandRoute = require("./routes/brandRoute");
 const productRoute = require("./routes/productRoute");
 const userRoute = require("./routes/userRoute");
 const AuthRoute = require("./routes/authRoute");
+const reviewRoute = require("./routes/reviewRoute");
 
 const ApiError = require("./utils/ApiError");
 const globalError = require("./middelwares/errorMiddleware");
@@ -37,6 +40,7 @@ app.use("/api/v1/brands", brandRoute);
 app.use("/api/v1/products", productRoute);
 app.use("/api/v1/users", userRoute);
 app.use("/api/v1/auth", AuthRoute);
+app.use("/api/v1/reviews", reviewRoute);
 
 app.all("*", (req, res, next) => {
   // const err=new Error(`cant find this route ${req.originalUrl}`)
@@ -61,3 +65,10 @@ process.on("unhandledRejection", (err) => {
     process.exit();
   });
 });
+
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
+app.use(cors(corsOptions));

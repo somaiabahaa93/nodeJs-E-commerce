@@ -6,6 +6,8 @@ const asyncHandler = require("express-async-handler");
 const { response } = require("express");
 const jwt = require("jsonwebtoken");
 const UserModel = require("../models/userModel");
+const ClintFrontEndModel = require("../models/clintModelFrontEnd");
+
 const ApiError = require("../utils/ApiError");
 const { sendEmail } = require("../utils/sendEmail");
 const createToken = require("../utils/createToken");
@@ -171,4 +173,36 @@ exports.verifyResetPassword = asyncHandler(async (req, res, next) => {
   await user.save();
   const token = createToken(user._id);
   res.status(200).json({ token: token });
+});
+
+// frontEndProject
+
+exports.frontEndSignUp = asyncHandler(async (req, res, next) => {
+  //1- create user
+  const user = await ClintFrontEndModel.create({
+    first_name: req.body.first_name,
+    last_name: req.body.last_name,
+    email: req.body.email,
+    password: req.body.password,
+    age: req.body.age,
+  });
+
+  // 2-send token
+  if (user) {
+    const token = createToken(user._id);
+    res.status(201).json({ data: user, message: "success", token });
+  }
+});
+
+exports.frontEndlLogin = asyncHandler(async (req, res, next) => {
+  // 1-check email & password in body ----validation
+  // 2- password is connected for email and email is exist
+  // 3-generate token
+  const user = await ClintFrontEndModel.findOne({ email: req.body.email });
+  if (!user || !(await bcrypt.compare(req.body.password, user.password))) {
+    return next(new ApiError("invalid email or password ", 401));
+  }
+  const token = createToken(user._id);
+
+  res.status(200).json({ data: user, token, message: "success" });
 });
