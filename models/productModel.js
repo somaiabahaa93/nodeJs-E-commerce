@@ -65,7 +65,12 @@ const productSchema = new mongoose.Schema(
     },
     ratingQuantitiy: { type: Number, default: 0 },
   },
-  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
+  {
+    timestamps: true,
+    // to enable virtual populate
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
 
 // virtual populate to get reviews of product

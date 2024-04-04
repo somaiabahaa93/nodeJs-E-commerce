@@ -43,6 +43,8 @@ exports.login = asyncHandler(async (req, res, next) => {
   res.status(200).json({ data: user, token });
 });
 
+
+
 // check if the user logged in (authentication)
 exports.protect = asyncHandler(async (req, res, next) => {
   // 1-check if token exists

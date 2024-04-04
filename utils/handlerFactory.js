@@ -9,6 +9,7 @@ exports.deleteOne = (Model) =>
     if (!document) {
       return next(new ApiError("no document found for this id", 404));
     }
+    document.remove();
     res.status(204).json({ msg: "deleted" });
   });
 
@@ -20,6 +21,7 @@ exports.updateOne = (Model) =>
     if (!document) {
       return next(new ApiError("no document found for this id", 404));
     }
+    document.save();
     res.status(200).json({ data: document });
   });
 
