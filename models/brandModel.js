@@ -20,7 +20,7 @@ const brandSchema = new mongoose.Schema(
 );
 
 // middleware for making image URL
-setImageUrl = (doc) => {
+const setImageUrl = (doc) => {
   if (doc.image) {
     const imageUrl = `${process.env.BASE_Url}/brands/${doc.image}`;
 

@@ -20,14 +20,20 @@ const categorySchema = new mongoose.Schema(
 );
 
 // middleware for making image URL
-setImageUrl = (doc) => {
+const setImageUrl = (doc) => {
   if (doc.image) {
     const imageUrl = `${process.env.BASE_Url}/categories/${doc.image}`;
+    console.log("imageUrLCat",imageUrl)
 
     doc.image = imageUrl;
   }
 };
 // getOne,get all,update
+// categorySchema.post("init", (doc) => {
+//   setImageUrl(doc);
+// });
+
+
 categorySchema.post("init", (doc) => {
   setImageUrl(doc);
 });

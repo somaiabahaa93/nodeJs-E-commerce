@@ -21,7 +21,7 @@ exports.signUpValidator = [
     .custom((val, { req }) =>
       UserModel.findOne({ email: val }).then((user) => {
         if (user) {
-          return Promise.reject(new Error("this email already used", 404));
+          return Promise.reject(new Error("this email already used", 401));
         }
       })
     ),
