@@ -30,8 +30,8 @@ exports.createReviewValidator = [
         user: req.user._id,
         product: req.body.product,
       }).then((review) => {
-        console.log("user", req.body.user);
-        console.log("product", req.body.product);
+        // console.log("user", req.body.user);
+        // console.log("product", req.body.product);
 
         if (review) {
           return Promise.reject(

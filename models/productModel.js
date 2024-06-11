@@ -86,6 +86,10 @@ productSchema.pre(/^find/, function (next) {
     path: "category",
     select: "name -_id",
     // eslint-disable-next-line no-sequences
+  }).populate({
+    path: "brand",
+    select: "name -_id",
+    // eslint-disable-next-line no-sequences
   }),
     next();
 });

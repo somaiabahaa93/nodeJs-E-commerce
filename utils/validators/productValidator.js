@@ -81,7 +81,7 @@ exports.createProductValidator = [
             // eslint-disable-next-line prefer-promise-reject-errors
             return Promise.reject("No subCategories found for this ids");
           }
-          console.log("res", result);
+          // console.log("res", result);
         })
     )
     .custom((val, { req }) =>

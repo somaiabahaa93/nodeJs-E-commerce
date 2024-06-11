@@ -48,7 +48,7 @@ exports.login = asyncHandler(async (req, res, next) => {
 // check if the user logged in (authentication)
 exports.protect = asyncHandler(async (req, res, next) => {
   // 1-check if token exists
-  console.log(req.headers);
+  // console.log(req.headers);
   let token;
   if (
     req.headers.authorization &&
@@ -57,13 +57,13 @@ exports.protect = asyncHandler(async (req, res, next) => {
     token = req.headers.authorization.split(" ")[1];
   }
 
-  console.log("token", token);
+  // console.log("token", token);
   if (!token) {
     return next(new ApiError("you are not logged right now", 401));
   }
   // 2-check token not changed & not expired
   const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-  console.log("decoded", decoded);
+  // console.log("decoded", decoded);
 
   // 3-chek user exists for this token
   const currentUser = await UserModel.findById(decoded.userId);
@@ -118,7 +118,7 @@ exports.forgetPassword = asyncHandler(async (req, res, next) => {
   user.passwordResetCode = hashedResetCode;
   user.passwordResetCodeExpires = Date.now() + 10 * 60 * 1000;
   user.passwordRestVerified = false;
-  console.log("user----", user);
+  // console.log("user----", user);
   user.save();
   // 3-send email to user
   const message = `hi ${user.name} \n

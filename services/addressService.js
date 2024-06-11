@@ -39,4 +39,40 @@ exports.getUserAddresses = asyncHandler(async (req, res, next) => {
   });
 });
 
+
+exports.updateAddress = asyncHandler(async (req, res, next) => {
+  const user = await UserModel.findById(req.user._id);
+
+  const address = user.addresses.id(req.params.addressId);
+
+  address.alias = req.body.alias || address.alias;
+  address.details = req.body.details || address.details;
+  address.phone = req.body.phone || address.phone;
+  address.city = req.body.city || address.city;
+  address.postalCode = req.body.postalCode || address.postalCode;
+
+  await user.save();
+
+  return res.status(200).json({
+    status: 'success',
+    message: 'Address updated successfully',
+    data: address,
+  });
+});
+
+// @desc      Get Specific address from addresses list
+// @route     Get /api/v1/addresses/:addressId
+// @access    Private/User
+exports.getAddress = asyncHandler(async (req, res, next) => {
+  const user = await UserModel.findById(req.user._id);
+
+  const address = user.addresses.id(req.params.addressId);
+
+  return res.status(200).json({
+    status: 'success',
+    data: address,
+  });
+});
+
+
 // module.exports=getCategories,createCategory

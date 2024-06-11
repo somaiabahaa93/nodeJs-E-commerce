@@ -55,13 +55,13 @@ reviewSchema.statics.calAvgRatingAndQuantity = async function (productId) {
       ratingsAverage: results[0].avgRating,
       ratingQuantitiy: results[0].ratingQ,
     });
-    console.log("ressss", results);
+    // console.log("ressss", results);
   } else {
     await ProductModel.findByIdAndUpdate(productId, {
       ratingsAverage: 0,
       ratingQuantitiy: 0,
     });
-    console.log("nooooo", results);
+    // console.log("nooooo", results);
   }
 };
 

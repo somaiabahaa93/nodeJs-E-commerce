@@ -8,6 +8,8 @@ const {
   addAddress,
   removeAddress,
   getUserAddresses,
+  updateAddress,
+  getAddress,
 } = require("../services/addressService");
 
 // router.get("/", getBrands);
@@ -16,10 +18,9 @@ router
   .post(authService.protect, authService.allowedTo("user"), addAddress)
   .get(authService.protect, authService.allowedTo("user"), getUserAddresses);
 
-router.delete(
-  "/:addressId",
-  authService.protect,
-  authService.allowedTo("user"),
-  removeAddress
-);
+router
+  .route("/:addressId")
+  .get(authService.protect, getAddress)
+  .delete(authService.protect, removeAddress)
+  .put(authService.protect, updateAddress);
 module.exports = router;

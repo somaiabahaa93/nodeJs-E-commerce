@@ -9,24 +9,24 @@ class ApiFeatures {
     const queryStringObj = { ...this.queryString };
     const excludes = ["limit", "page", "fields", "sort"];
     excludes.forEach((field) => delete queryStringObj[field]);
-    console.log("req", queryStringObj);
+    // console.log("req", queryStringObj);
     //  let mongooseQuery = ProductModel.find(queryStringObj)
-    console.log(this.pro);
+    // console.log(this.pro);
     // filtration using [gte,gt,lte,lt]
     let queryStr = JSON.stringify(queryStringObj);
     queryStr = queryStr.replace(/\b(gte|gt|lt|lte)\b/g, (match) => `$${match}`);
-    console.log(JSON.parse(queryStr));
+    // console.log(JSON.parse(queryStr));
     //  let mongooseQuery = ProductModel.find(JSON.parse(queryStr))
     this.mongoQuery = this.mongoQuery.find(JSON.parse(queryStr));
     return this;
   }
 
   sort() {
-    console.log("eq>>>>", this.queryString);
+    // console.log("eq>>>>", this.queryString);
     if (this.queryString.sort) {
       // if sort has more than 1 parameter
       const sortBy = this.queryString.sort.split(",").join(" ");
-      console.log(sortBy);
+      // console.log(sortBy);
       this.mongoQuery = this.mongoQuery.sort(sortBy);
     } else {
       this.mongoQuery = this.mongoQuery.sort("-createdAt");
@@ -38,7 +38,7 @@ class ApiFeatures {
     if (this.queryString.fields) {
       let { fields } = this.queryString;
       fields = fields.split(",").join(" ");
-      console.log("fields", fields);
+      // console.log("fields", fields);
       this.mongoQuery = this.mongoQuery.select(fields);
     } else {
       this.mongoQuery = this.mongoQuery.select("-__v");

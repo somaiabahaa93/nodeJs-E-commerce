@@ -9,6 +9,8 @@ const wishListRoute = require("./wishListRoute");
 const addressRoute = require("./addressRoute");
 // eslint-disable-next-line import/no-unresolved, import/extensions, node/no-missing-require
 const cartRoute = require("./cartRoute");
+const orderRoute = require("./orderRoute");
+
 // eslint-disable-next-line import/no-unresolved
 const couponRoute = require("./couponRoute");
 
@@ -23,6 +25,8 @@ const mountRoutes = (app) => {
   app.use("/api/v1/wishlist", wishListRoute);
   app.use("/api/v1/address", addressRoute);
   app.use("/api/v1/cart", cartRoute);
+  app.use("/api/v1/orders", orderRoute);
+
   app.use("/api/v1/coupon", couponRoute);
 };
 

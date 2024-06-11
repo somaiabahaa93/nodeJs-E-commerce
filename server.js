@@ -27,6 +27,11 @@ const ApiError = require("./utils/ApiError");
 const globalError = require("./middelwares/errorMiddleware");
 // express app
 const app = express();
+app.use(cors());
+app.options('*', cors());
+
+app.use(compression());
+
 
 // connect to db
 dbConnection();
@@ -43,7 +48,6 @@ app.use(express.static(path.join(__dirname, "uploads")));
 
 // Mount routes
 
-app.use(cors());
 
 
 
